@@ -11,6 +11,7 @@ Considering the big performance gap of various SOTA baseline, we provide a solid
 - tqdm 4.43.0
 - easydict 1.9
 
+pip install torch==1.4.0 torchvision==0.5.0 -f https://download.pytorch.org/whl/torch_stable.html
 
 ## Tricks
 - sample-wise loss not label-wise loss

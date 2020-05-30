@@ -74,6 +74,6 @@ def generate_data_description(save_dir, reorder):
 
 
 if __name__ == "__main__":
-    save_dir = './data/PETA/'
-
+    # save_dir = './data/PETA/'
+    save_dir = 'C:\\Users\\guofe\\workspace\\Strong_Baseline_of_Pedestrian_Attribute_Recognition\\data\\PETA\\'
     generate_data_description(save_dir, True)
