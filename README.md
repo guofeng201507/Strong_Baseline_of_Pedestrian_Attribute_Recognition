@@ -1,5 +1,8 @@
 ## A Strong Baseline of Pedestrian Attribute Recognition
 
+The code for our paper [Rethinking of Pedestrian Attribute Recognition: Realistic Datasets with Efficient Method](https://arxiv.org/abs/2005.11909).
+
+
 Considering the big performance gap of various SOTA baseline, we provide a solid and strong baseline for fair comparison.
 
 
@@ -67,6 +70,12 @@ RAP : A Richly Annotated Dataset for Pedestrian Attribute Recognition
 - v2.0 [[Paper](https://ieeexplore.ieee.org/abstract/document/8510891)][[Project](http://www.rapdataset.com/)]
 
 
+## Pretrained Models
+
+Pretrained models are provided now at [Google Drive](https://drive.google.com/drive/folders/1t2SG7-jAalF8gx3uvApA6hUzVh_lR-y0?usp=sharing).
+
+Because we ran the experiments again, so there may be subtle differences in performance.
+
 ## Get Started
 1. Run `git clone https://github.com/valencebond/Strong_Baseline_of_Pedestrian_Attribute_Recognition.git`
 2. Create a directory to dowload above datasets. 
@@ -105,9 +114,23 @@ RAP : A Richly Annotated Dataset for Pedestrian Attribute Recognition
     CUDA_VISIBLE_DEVICES=0 python train.py PETA
     ``` 
  
-## Reference
+## Acknowledgements
 
-Partial codes are based on the repository from [Dangwei Li](https://github.com/dangweili/pedestrian-attribute-recognition-pytorch) 
-and [Houjing Huang](https://github.com/dangweili/pedestrian-attribute-recognition-pytorch).
+Codes are based on the repository from [Dangwei Li](https://github.com/dangweili/pedestrian-attribute-recognition-pytorch) 
+and [Houjing Huang](https://github.com/dangweili/pedestrian-attribute-recognition-pytorch). Thanks for their released code.
+
+
+### Citation
+
+If you use this method or this code in your research, please cite as:
+
+    @misc{jia2020rethinking,
+        title={Rethinking of Pedestrian Attribute Recognition: Realistic Datasets with Efficient Method},
+        author={Jian Jia and Houjing Huang and Wenjie Yang and Xiaotang Chen and Kaiqi Huang},
+        year={2020},
+        eprint={2005.11909},
+        archivePrefix={arXiv},
+        primaryClass={cs.CV}
+    }
 
 
