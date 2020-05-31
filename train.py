@@ -24,7 +24,7 @@ def main(args):
     exp_dir = os.path.join('exp_result', args.dataset)
     model_dir, log_dir = get_model_log_path(exp_dir, visenv_name)
     stdout_file = os.path.join(log_dir, f'stdout_{time_str()}.txt')
-    save_model_path = os.path.join(model_dir, 'ckpt_max.pth')
+    save_model_path = os.path.join(model_dir, 'ckpt_max_new.pth')
 
     if args.redirector:
         print('redirector stdout')
@@ -138,7 +138,7 @@ def trainer(epoch, model, train_loader, valid_loader, criterion, optimizer, lr_s
 
         result_list[i] = [train_result, valid_result]
 
-    torch.save(result_list, os.path.join(os.path.dirname(path), 'metric_log.pkl'))
+    torch.save(result_list, os.path.join(os.path.dirname(path), 'metric_log_new.pkl'))
 
     return maximum, best_epoch
 

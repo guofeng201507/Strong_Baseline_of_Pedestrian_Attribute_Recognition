@@ -11,9 +11,11 @@ random.seed(0)
 
 # note: ref by annotation.md
 
-group_order = [10, 18, 19, 30, 15, 7, 9, 11, 14, 21, 26, 29, 32, 33, 34, 6, 8, 12, 25, 27, 31, 13, 23, 24, 28, 4, 5,
-               17, 20, 22, 0, 1, 2, 3, 16]
+# group_order = [10, 18, 19, 30, 15, 7, 9, 11, 14, 21, 26, 29, 32, 33, 34, 6, 8, 12, 25, 27, 31, 13, 23, 24, 28, 4, 5,
+#                17, 20, 22, 0, 1, 2, 3, 16]
 
+import random
+group_order = random.sample(range(115), 115)
 
 def make_dir(path):
     if os.path.exists(path):
@@ -26,7 +28,7 @@ def generate_data_description(save_dir, reorder):
     """
     create a dataset description file, which consists of images, labels
     """
-    peta_data = loadmat(os.path.join(save_dir, 'PETA.mat'))
+    peta_data = loadmat(os.path.join(save_dir, 'PETA_new.mat'))
     dataset = EasyDict()
     dataset.description = 'peta'
     dataset.reorder = 'group_order'
@@ -38,8 +40,8 @@ def generate_data_description(save_dir, reorder):
     raw_label = peta_data['peta'][0][0][0][:, 4:]
 
     # (19000, 35)
-    dataset.label = raw_label[:, :35]
-    dataset.attr_name = raw_attr_name[:35]
+    dataset.label = raw_label[:, :115]
+    dataset.attr_name = raw_attr_name[:115]
     if reorder:
         dataset.label = dataset.label[:, np.array(group_order)]
         dataset.attr_name = [dataset.attr_name[i] for i in group_order]
@@ -69,7 +71,7 @@ def generate_data_description(save_dir, reorder):
 
         dataset.weight_train.append(weight_train)
         dataset.weight_trainval.append(weight_trainval)
-    with open(os.path.join(save_dir, 'dataset.pkl'), 'wb+') as f:
+    with open(os.path.join(save_dir, 'dataset_new.pkl'), 'wb+') as f:
         pickle.dump(dataset, f)
 
 

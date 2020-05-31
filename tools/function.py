@@ -73,7 +73,7 @@ class LogVisual:
 
 def get_pkl_rootpath(dataset):
     root = os.path.join("./data", f"{dataset}")
-    data_path = os.path.join(root, 'dataset.pkl')
+    data_path = os.path.join(root, 'dataset_new.pkl')
 
     return data_path
 
