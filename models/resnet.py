@@ -89,6 +89,8 @@ class Bottleneck(nn.Module):
         self.conv3 = conv1x1(width, planes * self.expansion)
         self.bn3 = norm_layer(planes * self.expansion)
         self.relu = nn.ReLU(inplace=True)
+        # self.relu = nn.LeakyReLU(inplace=True)
+        # self.relu = nn.PReLU()
         self.downsample = downsample
         self.stride = stride
 
@@ -145,6 +147,8 @@ class ResNet(nn.Module):
                                bias=False)
         self.bn1 = norm_layer(self.inplanes)
         self.relu = nn.ReLU(inplace=True)
+        # self.relu = nn.LeakyReLU(inplace=True)
+        # self.dropout = nn.Dropout(0.2)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
         self.layer1 = self._make_layer(block, 64, layers[0])
         self.layer2 = self._make_layer(block, 128, layers[1], stride=2,
@@ -160,6 +164,7 @@ class ResNet(nn.Module):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+                # nn.init.kaiming_normal_(m.weight, mode='fan_out')
             elif isinstance(m, (nn.BatchNorm2d, nn.GroupNorm)):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
@@ -202,6 +207,7 @@ class ResNet(nn.Module):
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
+        # x = self.dropout(x)
         x = self.maxpool(x)
 
         x = self.layer1(x)
