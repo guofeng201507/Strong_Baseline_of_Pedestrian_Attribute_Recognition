@@ -21,8 +21,9 @@ set_seed(605)
 
 
 def main(args):
-    visenv_name = args.dataset
-    exp_dir = os.path.join('exp_result', args.dataset)
+    # visenv_name = args.dataset
+    visenv_name = 'PETA'
+    exp_dir = os.path.join('exp_result', visenv_name)
     model_dir, log_dir = get_model_log_path(exp_dir, visenv_name)
     stdout_file = os.path.join(log_dir, f'stdout_{time_str()}.txt')
     save_model_path = os.path.join(model_dir, 'ckpt_max_new.pth')
@@ -35,13 +36,13 @@ def main(args):
 
     print('-' * 60)
     print(f'use GPU{args.device} for training')
-    print(f'train set: {args.dataset} {args.train_split}, test set: {args.valid_split}')
 
     _, predict_tsfm = get_transform(args)
 
     valid_set = AttrDataset(args=args, split=args.valid_split, transform=predict_tsfm)
 
     args.att_list = valid_set.attr_id
+
     backbone = resnet50()
     classifier = BaseClassifier(nattr=valid_set.attr_num)
     model = FeatClassifier(backbone, classifier)
@@ -93,7 +94,7 @@ def main(args):
 if __name__ == '__main__':
     ### main function ###
     parser = argument_parser()
-    parser.add_argument('-dataset', type=str, default='PETA',
+    parser.add_argument('--dataset', type=str, default='PETA',
                         choices=['peta', 'rap', 'pa100k'])
     parser.add_argument('--demo_image', type=str, default='./static/uploads/00003.png')
     parser.add_argument('--model_weight_file', type=str,
