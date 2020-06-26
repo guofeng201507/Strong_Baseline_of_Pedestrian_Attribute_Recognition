@@ -41,6 +41,7 @@ def main(args):
 
     valid_set = AttrDataset(args=args, split=args.valid_split, transform=predict_tsfm)
 
+    args.att_list = valid_set.attr_id
     backbone = resnet50()
     classifier = BaseClassifier(nattr=valid_set.attr_num)
     model = FeatClassifier(backbone, classifier)
@@ -49,7 +50,7 @@ def main(args):
         model = torch.nn.DataParallel(model).cuda()
 
     ckpt = torch.load(save_model_path)
-    model.load_state_dict(ckpt['state_dicts'][0])
+    model.load_state_dict(ckpt['state_dicts'])
 
     model.cuda()
     model.eval()
@@ -86,7 +87,7 @@ def main(args):
             txt = '%s: %.5f' % (args.att_list[idx], sigmoid_score)
             draw.text((10, 10 + 10 * positive_cnt), txt, (255, 0, 0))
             positive_cnt += 1
-    img.save('./dataset/demo/demo_image_result_100_epoch.png')
+    img.save('./static/uploads/00003_new.png')
 
 
 if __name__ == '__main__':
