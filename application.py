@@ -16,6 +16,9 @@ app.secret_key = "secret key"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
+from pedestrian_attri_recog_model import AttrRecogModel
+
+model = AttrRecogModel()
 
 @app.route('/')
 def upload_form():
@@ -44,12 +47,12 @@ def upload_image():
 
 @app.route('/display/<filename>')
 def display_image(filename):
+    result = model.predict(filename)
+    output_filename = filename[:-4] +'_predicted.png'
     # print('display_image filename: ' + filename)
-    return redirect(url_for('static', filename='uploads/' + filename), code=301)
+    return redirect(url_for('static', filename='uploads/' + output_filename), code=301)
 
 
-def predict():
-    pass
 
 
 import io

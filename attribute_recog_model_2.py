@@ -19,9 +19,13 @@ from tools.utils import time_str, save_ckpt, ReDirectSTD, set_seed
 
 set_seed(605)
 
+def init():
+    parser = argument_parser()
+    parser.add_argument('--dataset', type=str, default='PETA', choices=['peta', 'rap', 'pa100k'])
+    parser.add_argument('--model_weight_file', type=str,
+                        default='./exp_result/PETA/PETA/img_model/ckpt_max_new.pth')
+    args = parser.parse_args()
 
-def main(args):
-    # visenv_name = args.dataset
     visenv_name = 'PETA'
     exp_dir = os.path.join('exp_result', visenv_name)
     model_dir, log_dir = get_model_log_path(exp_dir, visenv_name)
@@ -53,7 +57,6 @@ def main(args):
     ckpt = torch.load(save_model_path)
     model.load_state_dict(ckpt['state_dicts'])
 
-    model.cuda()
     model.eval()
 
     from torchsummary import summary
@@ -61,20 +64,29 @@ def main(args):
 
     print('Total number of parameters: ', sum(p.numel() for p in model.parameters() if p.requires_grad))
 
+    return args, predict_tsfm, model
+
+
+def predict(args, predict_tsfm, model, input_image):
+    # visenv_name = args.dataset
     # load one image
-    img = Image.open(args.demo_image)
+    path = './static/uploads/'
+    output_image = input_image[:-4] + '_predicted.png'
+    img = Image.open(path + input_image)
     img_trans = predict_tsfm(img)
     img_trans = torch.unsqueeze(img_trans, dim=0)
     img_var = Variable(img_trans).cuda()
     score = model(img_var).data.cpu().numpy()
 
     # show the score in command line
+    result = {}
     for idx in range(len(args.att_list)):
         orgin_score = score[0, idx]
         sigmoid_score = 1 / (1 + np.exp(-1 * orgin_score))
         # if score[0, idx] >= 0:
         #     print('%s: %.2f' % (cfg.att_list[idx], score[0, idx]))
         print('%s: %.5f' % (args.att_list[idx], sigmoid_score))
+        result[args.att_list[idx]] = sigmoid_score
 
     # show the score in the image
     img = img.resize(size=(256, 512), resample=Image.BILINEAR)
@@ -88,26 +100,11 @@ def main(args):
             txt = '%s: %.5f' % (args.att_list[idx], sigmoid_score)
             draw.text((10, 10 + 10 * positive_cnt), txt, (255, 0, 0))
             positive_cnt += 1
-    img.save('./static/uploads/00003_new.png')
+    # img.save('./static/uploads/00003_predicted.png')
+    img.save(path + output_image)
+
+    return result
 
 
-if __name__ == '__main__':
-    ### main function ###
-    parser = argument_parser()
-    parser.add_argument('--dataset', type=str, default='PETA',
-                        choices=['peta', 'rap', 'pa100k'])
-    parser.add_argument('--demo_image', type=str, default='./static/uploads/00003.png')
-    parser.add_argument('--model_weight_file', type=str,
-                        default='./exp_result/PETA/PETA/img_model/ckpt_max_new.pth')
-
-    args = parser.parse_args()
-    main(args)
-
-    # os.path.abspath()
-
-"""
-载入的时候要：
-from tools.function import LogVisual
-sys.modules['LogVisual'] = LogVisual
-log = torch.load('./save/2018-10-29_21:17:34trlog')
-"""
+args, predict_tsfm, model = init()
+predict(args, predict_tsfm, model, '00003.png')
