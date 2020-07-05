@@ -21,15 +21,13 @@ class AttrRecogModel:
     def __init__(self):
         parser = argument_parser()
         parser.add_argument('--dataset', type=str, default='PETA', choices=['peta', 'rap', 'pa100k'])
-        parser.add_argument('--model_weight_file', type=str,
-                            default='./exp_result/PETA/PETA/img_model/ckpt_max_new.pth')
         args = parser.parse_args()
 
         visenv_name = 'PETA'
         exp_dir = os.path.join('exp_result', visenv_name)
         model_dir, log_dir = get_model_log_path(exp_dir, visenv_name)
         stdout_file = os.path.join(log_dir, f'stdout_{time_str()}.txt')
-        save_model_path = os.path.join(model_dir, 'ckpt_max_new.pth')
+        save_model_path = os.path.join(model_dir, 'resnet50_100epoch.pth')
 
         if args.redirector:
             print('redirector stdout')
@@ -55,7 +53,6 @@ class AttrRecogModel:
 
         ckpt = torch.load(save_model_path)
         model.load_state_dict(ckpt['state_dicts'])
-
         model.eval()
 
         from torchsummary import summary
@@ -67,7 +64,7 @@ class AttrRecogModel:
         self.predict_tsfm = predict_tsfm
         self.model = model
 
-    def predict(self, input_image):
+    def predict_image(self, input_image):
         # visenv_name = args.dataset
         # load one image
         path = './static/uploads/'
@@ -102,5 +99,25 @@ class AttrRecogModel:
                 positive_cnt += 1
         # img.save('./static/uploads/00003_predicted.png')
         img.save(path + output_image)
+
+        return result
+
+    def predict_image_general(self, input_image_full_path):
+        from collections import OrderedDict
+        img = Image.open(input_image_full_path)
+        img_trans = self.predict_tsfm(img)
+        img_trans = torch.unsqueeze(img_trans, dim=0)
+        img_var = Variable(img_trans).cuda()
+        score = self.model(img_var).data.cpu().numpy()
+
+        # show the score in command line
+        result = OrderedDict()
+        for idx in range(len(self.args.att_list)):
+            orgin_score = score[0, idx]
+            sigmoid_score = 1 / (1 + np.exp(-1 * orgin_score))
+            # if score[0, idx] >= 0:
+            #     print('%s: %.2f' % (cfg.att_list[idx], score[0, idx]))
+            print('%s: %.5f' % (self.args.att_list[idx], sigmoid_score))
+            result[self.args.att_list[idx]] = sigmoid_score
 
         return result

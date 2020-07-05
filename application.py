@@ -48,7 +48,7 @@ def upload_image():
 
 @app.route('/display/<filename>')
 def display_image(filename):
-    result = model.predict(filename)
+    result = model.predict_image(filename)
     output_filename = filename[:-4] +'_predicted.png'
     # print('display_image filename: ' + filename)
     return redirect(url_for('static', filename='uploads/' + output_filename), code=301)

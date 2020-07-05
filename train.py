@@ -24,7 +24,7 @@ def main(args):
     exp_dir = os.path.join('exp_result', args.dataset)
     model_dir, log_dir = get_model_log_path(exp_dir, visenv_name)
     stdout_file = os.path.join(log_dir, f'stdout_{time_str()}.txt')
-    save_model_path = os.path.join(model_dir, 'ckpt_max_new.pth')
+    save_model_path = os.path.join(model_dir, 'ckpt_max_new_100.pth')
 
     if args.redirector:
         print('redirector stdout')

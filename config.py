@@ -5,11 +5,11 @@ def argument_parser():
     parser = argparse.ArgumentParser(description="attribute recognition",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    # parser.add_argument("dataset", type=str, default="RAP")
+    # parser.add_argument("dataset", type=str, default="RAP") #comment this out when running model as service
     parser.add_argument("--debug", action='store_false')
 
     parser.add_argument("--batchsize", type=int, default=64)
-    parser.add_argument("--train_epoch", type=int, default=30)
+    parser.add_argument("--train_epoch", type=int, default=100)
     parser.add_argument("--height", type=int, default=256)
     parser.add_argument("--width", type=int, default=192)
     parser.add_argument("--lr_ft", type=float, default=0.01, help='learning rate of feature extractor')
